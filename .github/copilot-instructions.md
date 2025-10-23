@@ -1,6 +1,6 @@
-# AI Rules for {{project-name}}
+# AI Rules for zamow.to
 
-{{project-description}}
+Project for quick and easy ordering of products from local stores.
 
 ## Tech Stack
 
