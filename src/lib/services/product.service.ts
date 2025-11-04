@@ -1,21 +1,18 @@
 import type { SupabaseClient } from "@/db/supabase.client";
 import type { PaginatedResponse, ProductListItemDto } from "@/types";
-import { z } from "zod";
 
-const GetProductsParams = z.object({
-  search: z.string().optional(),
-  categoryId: z.string().uuid().optional(),
-  page: z.number().int().min(1).default(1),
-  limit: z.number().int().min(1).max(100).default(20),
-});
-
-type GetProductsParams = z.infer<typeof GetProductsParams>;
+export interface GetProductsParams {
+  search?: string;
+  categoryId?: string;
+  page: number;
+  limit: number;
+}
 
 export class ProductService {
   constructor(private supabase: SupabaseClient) {}
 
   async getProducts(params: GetProductsParams): Promise<PaginatedResponse<ProductListItemDto>> {
-    const { search, categoryId, page, limit } = GetProductsParams.parse(params);
+    const { search, categoryId, page, limit } = params;
 
     let query = this.supabase
       .from("products")
