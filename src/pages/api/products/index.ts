@@ -11,7 +11,13 @@ const GetProductsQuerySchema = z.object({
 
 export const GET: APIRoute = async ({ locals, url }) => {
   const { supabase } = locals;
-  const queryParams = Object.fromEntries(url.searchParams.entries());
+  // Convert query params to correct types for zod validation
+  const rawParams = Object.fromEntries(url.searchParams.entries());
+  const queryParams = {
+    ...rawParams,
+    page: rawParams.page ? Number(rawParams.page) : undefined,
+    limit: rawParams.limit ? Number(rawParams.limit) : undefined,
+  };
 
   const validationResult = GetProductsQuerySchema.safeParse(queryParams);
 
@@ -41,10 +47,20 @@ export const GET: APIRoute = async ({ locals, url }) => {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    console.error("Error fetching products:", error);
-    return new Response(JSON.stringify({ message: "An internal server error occurred." }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
+    const errorDetails = error?.cause
+      ? typeof error.cause === "object"
+        ? JSON.stringify(error.cause)
+        : String(error.cause)
+      : String(error);
+    return new Response(
+      JSON.stringify({
+        message: "An internal server error occurred.",
+        details: errorDetails,
+      }),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
   }
 };

@@ -30,10 +30,9 @@ export class ProductService {
     }
 
     const { data, error, count } = await query.range((page - 1) * limit, page * limit - 1);
-
     if (error) {
-      console.error("Error fetching products:", error);
-      throw new Error("Could not fetch products.");
+      console.error("Product Service error", error);
+      throw new Error("Could not fetch products.", { cause: error });
     }
 
     return {
