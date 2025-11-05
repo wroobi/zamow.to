@@ -8,8 +8,7 @@
 -- Triggers: Auto-updating timestamps and user profile creation
 -- =====================================================================================
 
--- Enable UUID extension for generating UUIDs
-create extension if not exists "uuid-ossp";
+-- Note: Using gen_random_uuid() which is built-in to PostgreSQL 13+ (no extension needed)
 
 -- =====================================================================================
 -- UTILITY FUNCTIONS
@@ -86,7 +85,7 @@ create index profiles_role_idx on public.profiles (role);
 -- =====================================================================================
 
 create table public.categories (
-  id uuid primary key default uuid_generate_v4(),
+  id uuid primary key default gen_random_uuid(),
   name text not null unique,
   created_at timestamptz not null default now()
 );
@@ -125,7 +124,7 @@ create policy "Authenticated users can delete categories"
 -- =====================================================================================
 
 create table public.products (
-  id uuid primary key default uuid_generate_v4(),
+  id uuid primary key default gen_random_uuid(),
   category_id uuid references public.categories(id),
   name text not null,
   description text,
@@ -181,7 +180,7 @@ create index products_is_archived_idx on public.products (is_archived);
 -- =====================================================================================
 
 create table public.carts (
-  id uuid primary key default uuid_generate_v4(),
+  id uuid primary key default gen_random_uuid(),
   user_id uuid not null unique references public.profiles(id),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
@@ -230,7 +229,7 @@ create index carts_user_id_idx on public.carts (user_id);
 -- =====================================================================================
 
 create table public.cart_items (
-  id uuid primary key default uuid_generate_v4(),
+  id uuid primary key default gen_random_uuid(),
   cart_id uuid not null references public.carts(id),
   product_id uuid not null references public.products(id),
   quantity integer not null check (quantity > 0),
@@ -291,7 +290,7 @@ create index cart_items_product_id_idx on public.cart_items (product_id);
 -- =====================================================================================
 
 create table public.orders (
-  id uuid primary key default uuid_generate_v4(),
+  id uuid primary key default gen_random_uuid(),
   user_id uuid not null references public.profiles(id),
   status text not null default 'pending',
   total_amount numeric(10, 2) not null check (total_amount >= 0),
@@ -324,7 +323,7 @@ create index orders_status_idx on public.orders (status);
 -- =====================================================================================
 
 create table public.order_items (
-  id uuid primary key default uuid_generate_v4(),
+  id uuid primary key default gen_random_uuid(),
   order_id uuid not null references public.orders(id),
   product_id uuid references public.products(id),
   product_name text not null, -- Denormalized for historical accuracy
@@ -357,19 +356,24 @@ create index order_items_product_id_idx on public.order_items (product_id);
 
 -- =====================================================================================
 -- INITIAL DATA SEEDING
+
+-- Fryzjerskie kategorie produktowe
+insert into public.categories (name) values
+  ('Farby do włosów'),
+  ('Folie fryzjerskie'),
+  ('Grzebienie fryzjerskie'),
+  ('Suszarki do włosów'),
+  ('Nożyczki fryzjerskie'),
+  ('Maszynki do strzyżenia'),
+  ('Szampony do włosów'),
+  ('Odżywki do włosów'),
+  ('Pędzle do farby'),
+  ('Peleryny fryzjerskie');
+
 -- Purpose: Create basic categories for immediate application functionality
 -- =====================================================================================
 
--- Insert basic product categories
-insert into public.categories (name) values
-  ('Owoce i warzywa'),
-  ('Piekarnia'),
-  ('Nabiał'),
-  ('Mięso i wędliny'),
-  ('Napoje'),
-  ('Słodycze i przekąski'),
-  ('Artykuły gospodarstwa domowego'),
-  ('Zdrowie i uroda');
+
 
 -- =====================================================================================
 -- COMMENTS AND DOCUMENTATION
