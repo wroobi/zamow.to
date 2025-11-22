@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import type { ParsedListDto, ParsedListItemDto } from "@/types";
+import type { ParsedListDto, ParsedListItemDto, ProcessListCommand } from "@/types";
 
 export type ParserStatus = "idle" | "validating" | "processing" | "success" | "error";
 export interface ParserErrorState {
@@ -69,7 +69,6 @@ export function usePasteListParser(): UsePasteListParserResult {
   }, [rawText]);
 
   const processText = useCallback(async () => {
-    // Placeholder implementation (API integration will be added in next steps)
     const issues = validateRawText();
     if (issues.length) {
       setStatus("error");
@@ -78,25 +77,30 @@ export function usePasteListParser(): UsePasteListParserResult {
     }
     setStatus("processing");
     try {
-      // Future: fetch('/api/parser/process')...
-      const t = rawText.trim();
-      const items = t
-        .split(SPLIT_REGEX)
-        .map((i) => i.trim())
-        .filter(Boolean);
-      const fakeParsed: ParsedListItemDto[] = items.map((txt) => ({
-        original_text: txt,
-        status: "not_found",
-        suggested_product: null,
-        potential_matches: [],
-      }));
-      const dto: ParsedListDto = { parsed_items: fakeParsed };
+      const body: ProcessListCommand = { text: rawText.trim() };
+      const res = await fetch("/api/parser/process", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      if (!res.ok) {
+        if (res.status === 400) {
+          const errJson = await res.json().catch(() => ({}));
+          setStatus("error");
+          setError({ message: errJson.message || "Błąd walidacji", code: "VALIDATION" });
+          return;
+        }
+        setStatus("error");
+        setError({ message: "Błąd serwera", code: "SERVER" });
+        return;
+      }
+      const dto: ParsedListDto = await res.json();
       setParsedItems(dto.parsed_items);
       setStatus("success");
       setError(null);
-    } catch (e) {
+    } catch {
       setStatus("error");
-      setError({ message: "Nieoczekiwany błąd", code: "SERVER" });
+      setError({ message: "Błąd sieci", code: "NETWORK" });
     }
   }, [rawText, validateRawText]);
 
