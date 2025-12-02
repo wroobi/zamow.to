@@ -1,0 +1,14 @@
+---
+export const prerender = false;
+import AuthLayout from "../../layouts/AuthLayout.astro";
+import RegisterForm from "@/components/auth/RegisterForm";
+const { user } = Astro.locals;
+if (user) {
+  return Astro.redirect("/");
+}
+---
+
+<AuthLayout title="Załóż konto">
+  <h1 class="text-lg font-semibold mb-4">Załóż konto</h1>
+  <RegisterForm client:load />
+</AuthLayout>

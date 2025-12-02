@@ -1,0 +1,15 @@
+---
+export const prerender = false;
+import AuthLayout from "../../layouts/AuthLayout.astro";
+import LoginForm from "@/components/auth/LoginForm";
+const { user } = Astro.locals;
+console.log("User in login page:", user);
+if (user) {
+  return Astro.redirect("/");
+}
+---
+
+<AuthLayout title="Zaloguj się">
+  <h1 class="text-lg font-semibold mb-4">Zaloguj się</h1>
+  <LoginForm client:load />
+</AuthLayout>

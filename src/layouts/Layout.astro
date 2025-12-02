@@ -6,6 +6,7 @@ interface Props {
 }
 
 const { title = "10x Astro Starter" } = Astro.props;
+const { user } = Astro.locals;
 ---
 
 <!doctype html>
@@ -18,7 +19,33 @@ const { title = "10x Astro Starter" } = Astro.props;
     <title>{title}</title>
   </head>
   <body>
-    <slot />
+    <header class="flex items-center justify-between px-4 py-2 border-b border-neutral-200">
+      <a href="/" class="font-semibold">zamow.to</a>
+      {
+        user ? (
+          <div class="flex items-center gap-3">
+            <span class="text-sm text-neutral-700">{user.email ?? "Użytkownik"}</span>
+            <form method="post" action="/api/auth/logout">
+              <button type="submit" class="text-sm text-neutral-700 hover:underline">
+                Wyloguj
+              </button>
+            </form>
+          </div>
+        ) : (
+          <div class="flex items-center gap-3">
+            <a href="/auth/login" class="text-sm text-neutral-700 hover:underline">
+              Zaloguj
+            </a>
+            <a href="/auth/register" class="text-sm text-neutral-700 hover:underline">
+              Rejestracja
+            </a>
+          </div>
+        )
+      }
+    </header>
+    <main>
+      <slot />
+    </main>
   </body>
 </html>
 
