@@ -21,10 +21,14 @@ interface UsePasteListParserResult {
   status: ParserStatus;
   error: ParserErrorState | null;
   parsedItems: ParsedListItemDto[];
+  confirmedItems: ParsedListItemDto[];
   metrics: Metrics;
   setRawText: (v: string) => void;
   validateRawText: () => string[];
   processText: () => Promise<void>;
+  selectProduct: (index: number, product: { id: string; name: string }) => void;
+  updateQuantity: (index: number, quantity: number) => void;
+  confirmProducts: () => void;
   reset: () => void;
 }
 
@@ -33,6 +37,7 @@ export function usePasteListParser(): UsePasteListParserResult {
   const [status, setStatus] = useState<ParserStatus>("idle");
   const [error, setError] = useState<ParserErrorState | null>(null);
   const [parsedItems, setParsedItems] = useState<ParsedListItemDto[]>([]);
+  const [confirmedItems, setConfirmedItems] = useState<ParsedListItemDto[]>([]);
 
   const metrics: Metrics = useMemo(() => {
     const trimmed = rawText.trim();
@@ -111,7 +116,56 @@ export function usePasteListParser(): UsePasteListParserResult {
     setError(null);
   }, []);
 
-  return { rawText, status, error, parsedItems, metrics, setRawText, validateRawText, processText, reset };
+  const confirmProducts = useCallback(() => {
+    const confirmed = parsedItems.filter((item) => item.status === "matched" && item.suggested_product);
+    setConfirmedItems((prev) => [...prev, ...confirmed]);
+    setParsedItems([]);
+    setRawText("");
+    setStatus("idle");
+  }, [parsedItems]);
+
+  const updateQuantity = useCallback((index: number, quantity: number) => {
+    setParsedItems((prev) => {
+      if (index < 0 || index >= prev.length) return prev;
+      const next = [...prev];
+      const current = next[index];
+      next[index] = {
+        ...current,
+        quantity: Math.max(1, quantity),
+      };
+      return next;
+    });
+  }, []);
+
+  const selectProduct = useCallback((index: number, product: { id: string; name: string }) => {
+    setParsedItems((prev) => {
+      if (index < 0 || index >= prev.length) return prev;
+      const next = [...prev];
+      const current = next[index];
+      next[index] = {
+        ...current,
+        status: "matched",
+        suggested_product: { id: product.id, name: product.name },
+      };
+      return next;
+    });
+  }, []);
+
+  return {
+    rawText,
+    status,
+    error,
+    parsedItems,
+    confirmedItems,
+    metrics,
+    setRawText,
+    validateRawText,
+    processText,
+    selectProduct,
+    updateQuantity,
+    confirmProducts,
+    reset,
+  };
 }
 
 export const PASTE_LIST_CONSTANTS = { MAX_CHARS, SPLIT_REGEX } as const;

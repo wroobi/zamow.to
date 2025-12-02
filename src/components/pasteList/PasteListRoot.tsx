@@ -7,10 +7,24 @@ import PasteListTextarea from "./PasteListTextarea";
 import ProcessButton from "./ProcessButton";
 import HelperText from "./HelperText";
 import ShortcutHint from "./ShortcutHint";
+import ProductSelector from "./ProductSelector";
+import { Button } from "@/components/ui/button";
 
 function PasteListRoot() {
-  const { rawText, setRawText, status, error, processText, validateRawText, metrics, parsedItems } =
-    usePasteListParser();
+  const {
+    rawText,
+    setRawText,
+    status,
+    error,
+    processText,
+    validateRawText,
+    metrics,
+    parsedItems,
+    selectProduct,
+    updateQuantity,
+    confirmProducts,
+    confirmedItems,
+  } = usePasteListParser();
 
   const onProcess = useCallback(async () => {
     await processText();
@@ -44,9 +58,25 @@ function PasteListRoot() {
   const issues = validateRawText();
   const isProcessing = status === "processing";
   const disabled = isProcessing || issues.length > 0;
+  const canConfirm = parsedItems.some((item) => item.status === "matched");
 
   return (
     <div className="space-y-4" aria-live="polite">
+      {confirmedItems.length > 0 && (
+        <div className="border rounded p-4" role="region" aria-label="Zatwierdzone produkty">
+          <h2 className="text-sm font-medium mb-4">Zatwierdzone produkty ({confirmedItems.length})</h2>
+          <ul className="text-xs space-y-1">
+            {confirmedItems.map((item, index) => (
+              <li key={`${item.original_text}-${index}`} className="flex justify-between">
+                <span>
+                  {item.suggested_product?.name} (x{item.quantity || 1})
+                </span>
+                <span className="text-neutral-500">{item.original_text}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       <div className="space-y-2">
         <PasteListTextarea
           value={rawText}
@@ -91,37 +121,50 @@ function PasteListRoot() {
             </span>
           </h2>
           <ul className="text-xs space-y-1 max-h-64 overflow-auto">
-            {parsedItems.slice(0, 50).map((item: ParsedListItemDto) => (
-              <li key={item.original_text} className="flex justify-between gap-4 py-0.5">
-                <span className="truncate" title={item.original_text}>
-                  {item.original_text}
-                </span>
-                <span
-                  className={
-                    item.status === "matched"
-                      ? "inline-flex items-center gap-1 text-green-600"
-                      : item.status === "multiple_matches"
-                        ? "inline-flex items-center gap-1 text-yellow-600"
-                        : "inline-flex items-center gap-1 text-red-600"
-                  }
-                >
+            {parsedItems.slice(0, 50).map((item: ParsedListItemDto, idx) => (
+              <li key={item.original_text} className="py-0.5">
+                <div className="flex justify-between gap-4">
+                  <span className="truncate" title={item.original_text}>
+                    {item.original_text}
+                    {item.suggested_product && (
+                      <span className="ml-2 text-[10px] text-neutral-500" title={item.suggested_product.name}>
+                        → {item.suggested_product.name}
+                      </span>
+                    )}
+                  </span>
                   <span
                     className={
                       item.status === "matched"
-                        ? "h-2 w-2 rounded-full bg-green-500"
+                        ? "inline-flex items-center gap-1 text-green-600"
                         : item.status === "multiple_matches"
-                          ? "h-2 w-2 rounded-full bg-yellow-500"
-                          : "h-2 w-2 rounded-full bg-red-500"
+                          ? "inline-flex items-center gap-1 text-yellow-600"
+                          : "inline-flex items-center gap-1 text-red-600"
                     }
-                  />
-                  {item.status === "matched" && "✓"}
-                  {item.status === "multiple_matches" && "~"}
-                  {item.status === "not_found" && "✕"}
-                </span>
+                  >
+                    <span
+                      className={
+                        item.status === "matched"
+                          ? "h-2 w-2 rounded-full bg-green-500"
+                          : item.status === "multiple_matches"
+                            ? "h-2 w-2 rounded-full bg-yellow-500"
+                            : "h-2 w-2 rounded-full bg-red-500"
+                      }
+                    />
+                    {item.status === "matched" && "✓"}
+                    {item.status === "multiple_matches" && "~"}
+                    {item.status === "not_found" && "✕"}
+                  </span>
+                </div>
+                <ProductSelector item={item} index={idx} onSelect={selectProduct} onUpdateQuantity={updateQuantity} />
               </li>
             ))}
           </ul>
           {parsedItems.length > 50 && <p className="mt-2 text-[10px] text-neutral-400">(Wyświetlono pierwsze 50)</p>}
+          {canConfirm && (
+            <div className="mt-4">
+              <Button onClick={confirmProducts}>Zatwierdź produkty</Button>
+            </div>
+          )}
         </div>
       )}
     </div>

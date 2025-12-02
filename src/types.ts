@@ -81,8 +81,9 @@ export type OrderDetailDto = OrderListItemDto & {
 export interface ParsedListItemDto {
   original_text: string;
   status: "matched" | "multiple_matches" | "not_found";
-  suggested_product: Pick<Product, "id" | "name"> | null;
-  potential_matches: Pick<Product, "id" | "name">[];
+  suggested_product: { id: string; name: string } | null;
+  potential_matches: { id: string; name: string }[];
+  quantity: number;
 }
 
 /**
