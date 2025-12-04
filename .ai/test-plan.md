@@ -76,7 +76,7 @@ Proces testowania zostanie podzielony na kilka poziomów, aby zapewnić kompleks
 - **Testy End-to-End (E2E):**
   - **Cel:** Symulacja rzeczywistych scenariuszy użytkownika w przeglądarce.
   - **Zakres:** Pełne ścieżki użytkownika, np. "rejestracja -> logowanie -> wklejenie listy -> przetworzenie -> wylogowanie".
-  - **Narzędzia:** Playwright lub Cypress.
+  - **Narzędzia:** Playwright .
 - **Testy API:**
   - **Cel:** Bezpośrednia weryfikacja endpointów API w `src/pages/api`.
   - **Zakres:** Sprawdzanie poprawności odpowiedzi, kodów statusu, obsługi błędów i walidacji danych wejściowych (Zod).

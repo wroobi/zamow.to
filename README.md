@@ -1,6 +1,7 @@
 # zamow.to
 
 ## Table of Contents
+
 1. [Project Description](#project-description)
 2. [Tech Stack](#tech-stack)
 3. [Getting Started Locally](#getting-started-locally)
@@ -15,12 +16,15 @@
 
 ## Tech Stack
 
-- **Frontend:** Astro, React, TailwindCSS, shadcn/ui
+- **Frontend:** Astro 5, React 19, TailwindCSS 4, shadcn/ui
 - **Backend:** Supabase (PostgreSQL-based BaaS)
 - **AI:** OpenRouter for text parsing
 - **Hosting:** DigitalOcean with Docker
 - **CI/CD:** GitHub Actions
 - **Development Tools:** ESLint, Prettier, Husky, lint-staged
+- **Testing Framework:** Vitest (Unit/Integration), React Testing Library, Playwright (E2E)
+- **API Testing:** Mock Service Worker (MSW), Postman
+- **Code Quality:** Minimum 70% code coverage for unit tests
 
 ## Getting Started Locally
 
@@ -54,6 +58,40 @@
 - `npm run lint` – Runs ESLint to check for code quality issues.
 - `npm run lint:fix` – Automatically fixes linting issues.
 - `npm run format` – Formats the code using Prettier.
+- `npm run test` – Runs unit and integration tests with Vitest.
+- `npm run test:watch` – Runs tests in watch mode during development.
+- `npm run test:ui` – Opens Vitest UI for visual test management.
+- `npm run test:e2e` – Runs end-to-end tests with Playwright.
+- `npm run test:coverage` – Generates test coverage report.
+
+## Testing Strategy
+
+### Testing Framework
+
+The project implements a comprehensive testing strategy with multiple levels of testing:
+
+- **Unit Tests:** Vitest + React Testing Library for components, hooks, and services
+- **Integration Tests:** Testing component interactions with backend APIs using MSW
+- **E2E Tests:** Playwright for full user journey testing (Chrome/Desktop focus)
+- **API Tests:** Direct endpoint testing with Zod validation verification
+- **Security Tests:** Row Level Security (RLS) verification and authorization testing
+- **Visual Regression Tests:** Playwright screenshot comparison for UI consistency
+
+### Quality Gates
+
+- Minimum 70% code coverage for unit tests
+- 100% pass rate for critical priority test scenarios
+- 95% pass rate for high priority test scenarios
+- Zero critical or blocking bugs before production deployment
+- Automated testing in CI/CD pipeline (GitHub Actions)
+
+### Key Test Areas
+
+1. **Authentication & Authorization:** User registration, login, session management, RLS policies
+2. **AI Text Parsing:** OpenRouter integration, error handling, various input formats
+3. **Product Management:** Shopping cart operations, product catalog, order processing
+4. **UI/UX Quality:** Responsive design, accessibility (WCAG), component behavior
+5. **Performance:** API response times, page load speeds, AI processing efficiency
 
 ## Project Scope
 

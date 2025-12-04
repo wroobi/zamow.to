@@ -64,3 +64,24 @@ Wybór między Docker/DigitalOcean a Vercel sprowadza się do priorytetów: maks
 - **Infrastruktura:** Docker i DigitalOcean pozwalają na implementację standardowych praktyk bezpieczeństwa, takich jak konfiguracja firewalla, zarządzanie dostępem i regularne aktualizacje.
 
 **Podsumowując:** Wybrany stos technologiczny jest bardzo dobrym, profesjonalnym wyborem. Stanowi złoty środek między szybkością dostarczenia MVP a budowaniem solidnej, skalowalnej i bezpiecznej platformy na przyszłość. Ewentualna zmiana na prostsze rozwiązanie hostingowe (Vercel) mogłaby jeszcze bardziej przyspieszyć start, kosztem elastyczności w dłuższej perspektywie.
+
+---
+
+### 7. Czy stos technologiczny wspiera odpowiednią strategię testowania?
+
+**Tak, wybrane technologie doskonale wspierają kompleksową strategię testowania na wszystkich poziomach.**
+
+- **Testy Jednostkowe i Integracyjne:** Vitest i React Testing Library to nowoczesne, szybkie narzędzia zoptymalizowane pod TypeScript i React. Vitest oferuje doskonałe wsparcie dla mocków, snapshot testing i hot reload podczas development.
+- **Testy E2E:** Playwright zapewnia niezawodne testowanie w przeglądarce z natywnym wsparciem dla TypeScript, visual regression testing i możliwością nagrywania testów. Idealne do weryfikacji pełnych ścieżek użytkownika.
+- **Testowanie API:** Kombinacja MSW (Mock Service Worker) dla kontrolowanego mockowania oraz bezpośredniego testowania endpointów Astro z walidacją Zod zapewnia kompleksowe pokrycie warstwy API.
+- **Bezpieczeństwo:** Supabase RLS można skutecznie testować przez automatyczne weryfikacje uprawnień dostępu, co jest kluczowe dla aplikacji B2B.
+- **CI/CD Integration:** GitHub Actions natywnie wspiera wszystkie wybrane narzędzia testowe i może automatycznie blokować deployment przy nieprzechodzących testach.
+- **Quality Gates:** Możliwość ustawienia progów pokrycia kodu (70% minimum), automatycznej analizy performance i visual regression testing zapewnia wysoką jakość produktu.
+
+**Strategia testowania zapewnia:**
+
+- Szybki feedback loop podczas development (Vitest watch mode)
+- Automatyczną weryfikację kluczowych scenariuszy biznesowych
+- Ochronę przed regresją funkcjonalności
+- Weryfikację bezpieczeństwa i autoryzacji
+- Kontrolę jakości UI/UX i dostępności
