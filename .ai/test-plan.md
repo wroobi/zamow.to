@@ -124,6 +124,30 @@ Proces testowania zostanie podzielony na kilka poziomów, aby zapewnić kompleks
 | TC-AUTH-005    | Niezalogowany użytkownik próbuje uzyskać dostęp do strony `/app`.      | Użytkownik jest przekierowany na stronę logowania (`/auth/login`).                |
 | TC-AUTH-006    | Użytkownik A (zalogowany) próbuje odpytać API o dane użytkownika B.    | Dostęp zostaje zablokowany (dzięki RLS w Supabase).                               |
 
+#### 4.2.1 Plan pokrycia testami jednostkowymi logowania
+
+Plan obejmuje moduły `src/components/auth/LoginForm.tsx`, `src/pages/api/auth/login.ts` oraz `src/middleware/index.ts`. Testy przygotowujemy w Vitest z wykorzystaniem React Testing Library i globalnych mocków konfigurowanych w `vitest.setup.ts`. Każdy scenariusz TC-AUTH otrzymuje dedykowany zestaw przypadków testowych odwzorowujących oczekiwane ścieżki oraz obsługę błędów.
+
+- **TC-AUTH-003 – logowanie z poprawnymi danymi**
+  - LoginForm: mock `global.fetch` (`ok: true`), `toast.success` i `window.location.assign`; asercje na wysłanie żądania `POST`, blokadę przycisku oraz przekierowanie po sukcesie.
+  - Endpoint `/api/auth/login`: mock `createSupabaseServerInstance` z pozytywnym wynikiem `signInWithPassword`; weryfikacja statusu `200`, poprawnej walidacji Zod i przekazania ciasteczek/nagłówków.
+
+- **TC-AUTH-004 – logowanie z błędnym hasłem**
+  - LoginForm: `fetch` zwraca `ok: false`; oczekujemy `toast.error` i braku zmiany lokalizacji.
+  - Endpoint `/api/auth/login`: `signInWithPassword` zwraca błąd; asercja statusu `401` oraz komunikatu. Dodatkowy test walidacji schematu (np. krótkie hasło) -> status `400`.
+
+- **TC-AUTH-005 – ochrona tras przed gościem**
+  - Middleware: symulacja `url.pathname = "/app"` oraz `getUser` zwracającego `null`; spodziewamy się wywołania `redirect("/auth/login")` i niedopuszczenia do `next()`.
+  - Ścieżki publiczne: test kontrolny z `url.pathname = "/auth/login"` sprawdzający, że `next()` jest wywoływane bez redirectu.
+
+- **TC-AUTH-006 – separacja danych zalogowanych użytkowników**
+  - Middleware: `getUser` zwraca obiekt użytkownika; asercja, że `locals.user` jest uzupełnione i `next()` wykonuje się bez przekierowania.
+  - Endpoint `/api/auth/login`: weryfikacja, że `createSupabaseServerInstance` otrzymuje `cookies` i nagłówki żądania (podstawa dla dalszych zapytań objętych RLS). Scenariusz z błędem sesji powinien zwrócić `401`.
+
+- **Mocki i narzędzia wspólne**
+  - Globalne mocki w `vitest.setup.ts`: `sonner` (`toast.success`, `toast.error`), `window.location` oraz fabryka supabase.
+  - W testach komponentów używamy React Testing Library z `userEvent` oraz `await waitFor`. Po każdym teście `vi.resetAllMocks()`.
+
 ---
 
 ### 5. Środowisko Testowe

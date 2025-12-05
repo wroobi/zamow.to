@@ -1,6 +1,4 @@
 import { defineMiddleware } from "astro:middleware";
-
-import { defineMiddleware } from "astro:middleware";
 import { createSupabaseServerInstance } from "@/db/supabase.client";
 
 const PUBLIC_PATHS = [

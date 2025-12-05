@@ -3,7 +3,7 @@ export const prerender = false;
 import AuthLayout from "../../layouts/AuthLayout.astro";
 import LoginForm from "@/components/auth/LoginForm";
 const { user } = Astro.locals;
-console.log("User in login page:", user);
+
 if (user) {
   return Astro.redirect("/");
 }
