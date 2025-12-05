@@ -55,14 +55,35 @@
 - `npm run dev` – Starts the development server.
 - `npm run build` – Builds the project for production.
 - `npm run preview` – Previews the built project locally.
+- `npm run astro` – Runs arbitrary Astro CLI commands.
 - `npm run lint` – Runs ESLint to check for code quality issues.
 - `npm run lint:fix` – Automatically fixes linting issues.
 - `npm run format` – Formats the code using Prettier.
-- `npm run test` – Runs unit and integration tests with Vitest.
-- `npm run test:watch` – Runs tests in watch mode during development.
-- `npm run test:ui` – Opens Vitest UI for visual test management.
-- `npm run test:e2e` – Runs end-to-end tests with Playwright.
-- `npm run test:coverage` – Generates test coverage report.
+- `npm run test` – Alias for the full Vitest run (`npm run test:unit`).
+- `npm run test:unit` – Executes the Vitest suite in CI-friendly mode.
+- `npm run test:unit:watch` – Runs Vitest in watch mode for rapid feedback.
+- `npm run test:unit:coverage` – Generates Istanbul coverage reports.
+- `npm run test:e2e` – Launches Chromium-based Playwright tests.
+- `npm run test:e2e:debug` – Starts Playwright with the inspector for debugging.
+- `npm run test:e2e:ui` – Opens Playwright UI mode for triaging test runs.
+
+## Running Tests Locally
+
+### Unit & Integration (Vitest + Testing Library)
+
+1. Run the full suite with `npm run test:unit` (used in CI as well).
+2. Use `npm run test:unit:watch` while developing components, hooks, or services.
+3. Generate Istanbul coverage artifacts via `npm run test:unit:coverage`; output is stored in `coverage/unit`.
+
+The Vitest config uses the jsdom environment, cleans up React trees after each test, and respects the `@/*` path alias through `vite-tsconfig-paths` as required by the testing guidelines.
+
+### End-to-End (Playwright)
+
+1. Install the Chromium browser bundle once per machine: `npx playwright install --with-deps chromium`.
+2. Execute the smoke suite with `npm run test:e2e`; this boots the Astro dev server on port `4321` automatically.
+3. Use `npm run test:e2e:debug` for inspector-driven debugging or `npm run test:e2e:ui` for triaging runs interactively.
+
+Playwright is configured to run only the Chromium/Desktop Chrome project, capture traces and screenshots on failure, and honors a custom `PLAYWRIGHT_BASE_URL` if you need to point tests at a deployed instance.
 
 ## Testing Strategy
 
