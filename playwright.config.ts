@@ -9,7 +9,7 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   reporter: process.env.CI ? [["github"], ["html", { open: "never" }]] : "list",
   use: {
-    baseURL: process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:4321",
+    baseURL: process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:3000",
     trace: "on-first-retry",
     screenshot: "only-on-failure",
     video: "retain-on-failure",
@@ -21,9 +21,9 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "npm run dev",
-    port: 4321,
-    reuseExistingServer: !process.env.CI,
+    command: "npm run dev:e2e",
+    port: 3000,
+    reuseExistingServer: true,
     timeout: 120_000,
   },
 });
