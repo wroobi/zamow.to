@@ -29,12 +29,27 @@ export default function RegisterForm() {
 
   async function onSubmit(values: FormValues) {
     try {
-      await fetch("/api/auth/register", {
+      const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: values.email, password: values.password }),
       });
-      toast.success("Konto utworzone. Zalogowano automatycznie.");
+
+      const json = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        toast.error(json.error || "Rejestracja nie powiodła się.");
+        return;
+      }
+
+      // If server returned a user, we are logged in. Otherwise show info message.
+      if (json.user) {
+        toast.success("Konto utworzone. Zalogowano automatycznie.");
+        window.location.href = "/";
+        return;
+      }
+
+      toast.success(json.message || "Konto utworzone. Sprawdź pocztę w celu potwierdzenia.");
     } catch (e) {
       toast.error("Rejestracja nie powiodła się. Spróbuj ponownie.");
     }

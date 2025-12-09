@@ -29,11 +29,23 @@ export default function UpdatePasswordForm() {
 
   async function onSubmit(values: FormValues) {
     try {
-      await fetch("/api/auth/update-password", {
+      const params = new URLSearchParams(window.location.search);
+      const access_token = params.get("access_token") || undefined;
+
+      const res = await fetch("/api/auth/update-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password: values.password }),
+        body: JSON.stringify({ password: values.password, access_token }),
       });
+
+      const json = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        setInfo(json.error || "Wystąpił błąd. Spróbuj ponownie później.");
+        toast.error(json.error || "Nie udało się zmienić hasła.");
+        return;
+      }
+
       setInfo("Hasło zostało zaktualizowane. Możesz się zalogować.");
       toast.success("Hasło zmienione pomyślnie.");
     } catch (e) {
