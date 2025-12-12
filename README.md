@@ -139,4 +139,4 @@ The project is currently in the MVP development phase. Core features such as use
 
 ## License
 
-This project is licensed under the terms outlined in the [LICENSE](./LICENSE) file.
+Private app
