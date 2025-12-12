@@ -1,13 +1,14 @@
 import { afterEach, describe, expect, it, type Mock, vi } from "vitest";
 import { POST } from "../login";
 import { createSupabaseServerInstance } from "@/db/supabase.client";
+import type { APIContext } from "astro";
 
 vi.mock("@/db/supabase.client", () => ({
   createSupabaseServerInstance: vi.fn(),
 }));
 
 describe("POST /api/auth/login", () => {
-  const cookiesStub = {} as any;
+  const cookiesStub = {} as unknown;
   const headers = new Headers({ "content-type": "application/json" });
 
   afterEach(() => {
@@ -33,7 +34,7 @@ describe("POST /api/auth/login", () => {
       body: JSON.stringify(payload),
     });
 
-    const response = await POST({ request, cookies: cookiesStub } as any);
+    const response = await POST({ request, cookies: cookiesStub } as unknown as APIContext);
 
     expect(createSupabaseServerInstance).toHaveBeenCalledWith({
       cookies: cookiesStub,
@@ -62,7 +63,7 @@ describe("POST /api/auth/login", () => {
       body: JSON.stringify({ email: "jan@test.pl", password: "zlehaslo" }),
     });
 
-    const response = await POST({ request, cookies: cookiesStub } as any);
+    const response = await POST({ request, cookies: cookiesStub } as unknown as APIContext);
 
     expect(response.status).toBe(401);
     expect(await response.json()).toEqual({ error: "Invalid credentials." });
@@ -75,7 +76,7 @@ describe("POST /api/auth/login", () => {
       body: JSON.stringify({ email: "niepoprawny", password: "123" }),
     });
 
-    const response = await POST({ request, cookies: cookiesStub } as any);
+    const response = await POST({ request, cookies: cookiesStub } as unknown as APIContext);
 
     expect(response.status).toBe(400);
     expect(await response.json()).toEqual({ error: "Invalid email or password." });

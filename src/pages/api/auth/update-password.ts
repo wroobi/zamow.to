@@ -9,7 +9,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   let payload: z.infer<typeof UpdateSchema>;
   try {
     payload = UpdateSchema.parse(await request.json());
-  } catch (err) {
+  } catch {
     return new Response(JSON.stringify({ error: "Invalid request." }), { status: 400 });
   }
 
@@ -20,7 +20,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     await supabase.auth.setSession({ access_token: payload.access_token, refresh_token: "" }).catch(() => null);
   }
 
-  const { data, error } = await supabase.auth
+  const { error } = await supabase.auth
     .updateUser({ password: payload.password })
     .catch(() => ({ data: null, error: { message: "Update failed." } }));
 

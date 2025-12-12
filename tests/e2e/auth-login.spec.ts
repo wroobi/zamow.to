@@ -71,13 +71,13 @@ test.describe.serial("Logowanie użytkownika", () => {
     await page.waitForSelector('form[aria-label="Formularz logowania"]');
 
     // Intercept login and respond with a valid user
-    let capturedRequest: any = null;
+    let capturedRequest: { email: string } | null = null;
     await page.route("**/api/auth/login", async (route) => {
       capturedRequest = await route.request().postDataJSON();
       await route.fulfill({
         status: 200,
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ user: { id: "user-1", email: capturedRequest.email } }),
+        body: JSON.stringify({ user: { id: "user-1", email: capturedRequest?.email } }),
       });
     });
 

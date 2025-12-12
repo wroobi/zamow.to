@@ -48,7 +48,7 @@ export default function UpdatePasswordForm() {
 
       setInfo("Hasło zostało zaktualizowane. Możesz się zalogować.");
       toast.success("Hasło zmienione pomyślnie.");
-    } catch (e) {
+    } catch {
       setInfo("Wystąpił błąd. Spróbuj ponownie później.");
       toast.error("Nie udało się zmienić hasła.");
     }

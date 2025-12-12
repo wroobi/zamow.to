@@ -9,13 +9,13 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   let payload: z.infer<typeof ResetSchema>;
   try {
     payload = ResetSchema.parse(await request.json());
-  } catch (err) {
+  } catch {
     return new Response(JSON.stringify({ error: "Invalid email." }), { status: 400 });
   }
 
   const supabase = createSupabaseServerInstance({ cookies, headers: request.headers });
 
-  const { data, error } = await supabase.auth.resetPasswordForEmail(payload.email, {
+  const { error } = await supabase.auth.resetPasswordForEmail(payload.email, {
     redirectTo: `${import.meta.env.SITE ?? ""}/auth/update-password`,
   });
 

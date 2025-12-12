@@ -12,7 +12,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   let payload: z.infer<typeof LoginSchema>;
   try {
     payload = LoginSchema.parse(await request.json());
-  } catch (err) {
+  } catch {
     return new Response(JSON.stringify({ error: "Invalid email or password." }), { status: 400 });
   }
 

@@ -35,8 +35,9 @@ export default function LoginForm() {
       }
 
       toast.success("Zalogowano pomyślnie");
+      // eslint-disable-next-line react-compiler/react-compiler
       window.location.href = "/";
-    } catch (e) {
+    } catch {
       toast.error("Nie udało się zalogować. Spróbuj ponownie.");
     }
   }

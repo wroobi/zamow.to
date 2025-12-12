@@ -14,7 +14,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   let payload: z.infer<typeof RegisterSchema>;
   try {
     payload = RegisterSchema.parse(await request.json());
-  } catch (err) {
+  } catch {
     return new Response(JSON.stringify({ error: "Invalid registration data." }), { status: 400 });
   }
 

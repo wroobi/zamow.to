@@ -27,7 +27,7 @@ export default function ResetPasswordForm() {
       });
       setInfo("Jeśli adres istnieje, wysłaliśmy instrukcje resetowania.");
       toast.success("Sprawdź skrzynkę pocztową, wysłaliśmy instrukcje.");
-    } catch (e) {
+    } catch {
       setInfo("Wystąpił błąd. Spróbuj ponownie później.");
       toast.error("Nie udało się wysłać instrukcji.");
     }

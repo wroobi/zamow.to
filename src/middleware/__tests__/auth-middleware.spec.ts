@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { onRequest } from "../index";
+import type { APIContext } from "astro";
 
 const createSupabaseServerInstanceMock = vi.hoisted(() => vi.fn());
 
@@ -18,11 +19,11 @@ describe("middleware auth", () => {
     return {
       ctx: {
         locals,
-        cookies: {} as any,
+        cookies: {} as unknown,
         url,
         request,
         redirect,
-      } as any,
+      } as unknown as APIContext,
       locals,
       redirect,
       next,

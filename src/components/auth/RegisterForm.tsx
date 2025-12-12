@@ -45,12 +45,13 @@ export default function RegisterForm() {
       // If server returned a user, we are logged in. Otherwise show info message.
       if (json.user) {
         toast.success("Konto utworzone. Zalogowano automatycznie.");
+        // eslint-disable-next-line react-compiler/react-compiler
         window.location.href = "/";
         return;
       }
 
       toast.success(json.message || "Konto utworzone. Sprawdź pocztę w celu potwierdzenia.");
-    } catch (e) {
+    } catch {
       toast.error("Rejestracja nie powiodła się. Spróbuj ponownie.");
     }
   }
