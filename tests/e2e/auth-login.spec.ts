@@ -70,14 +70,10 @@ test.describe.serial("Logowanie użytkownika", () => {
     await loginPage.goto();
     await page.waitForSelector('form[aria-label="Formularz logowania"]');
 
-    // Use real test credentials from environment variables
-    const testEmail = process.env.E2E_USERNAME || "";
-    const testPassword = process.env.E2E_PASSWORD || "";
+    // Submit form
+    await loginPage.submit({ email: `${process.env.E2E_USERNAME}`, password: `${process.env.E2E_PASSWORD}` });
 
-    // Submit form with real test user credentials
-    await loginPage.submit({ email: testEmail, password: testPassword });
-
-    // Wait for redirect to home page after successful login
+    // Wait for redirect to home page
     await page.waitForURL(/\/$/, { timeout: 10000 });
   });
 });
