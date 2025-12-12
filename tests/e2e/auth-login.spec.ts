@@ -70,27 +70,14 @@ test.describe.serial("Logowanie użytkownika", () => {
     await loginPage.goto();
     await page.waitForSelector('form[aria-label="Formularz logowania"]');
 
-    // Intercept login and respond with a valid user
-    let capturedRequest: { email: string } | null = null;
-    await page.route("**/api/auth/login", async (route) => {
-      capturedRequest = await route.request().postDataJSON();
-      await route.fulfill({
-        status: 200,
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ user: { id: "user-1", email: capturedRequest?.email } }),
-      });
-    });
+    // Use real test credentials from environment variables
+    const testEmail = process.env.E2E_USERNAME || "";
+    const testPassword = process.env.E2E_PASSWORD || "";
 
-    // Wait for the request to be made and fulfil it with 200
-    const [request] = await Promise.all([
-      page.waitForRequest((r) => r.url().includes("/api/auth/login") && r.method() === "POST"),
-      loginPage.submit({ email: "jan@firma.pl", password: "poprawnehaslo" }),
-    ]);
+    // Submit form with real test user credentials
+    await loginPage.submit({ email: testEmail, password: testPassword });
 
-    // Ensure the intercepted route was called and responded with 200
-    expect(request).toBeTruthy();
-
-    // Now wait for navigation to happen as app sets window.location.href = '/'
-    await page.waitForURL(/\/$/, { timeout: 5000 });
+    // Wait for redirect to home page after successful login
+    await page.waitForURL(/\/$/, { timeout: 10000 });
   });
 });
