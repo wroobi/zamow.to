@@ -1,0 +1,6 @@
+name = "zamow-to"
+compatibility_date = "2025-12-13"
+compatibility_flags = ["nodejs_compat"]
+
+[observability]
+enabled = true
