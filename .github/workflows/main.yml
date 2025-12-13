@@ -62,3 +62,4 @@ jobs:
           projectName: zamow-to
           directory: dist
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          wranglerVersion: "3"
