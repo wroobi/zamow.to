@@ -42,15 +42,17 @@ export default function RegisterForm() {
         return;
       }
 
-      // If server returned a user, we are logged in. Otherwise show info message.
-      if (json.user) {
-        toast.success("Konto utworzone. Zalogowano automatycznie.");
-        // eslint-disable-next-line react-compiler/react-compiler
-        window.location.href = "/";
-        return;
-      }
+      // Show server message (instructions to confirm email), then redirect to login.
+      toast.success(
+        json.message ||
+          "Konto zostało utworzone! Sprawdź swoją skrzynkę pocztową i kliknij w link potwierdzający, aby aktywować konto."
+      );
 
-      toast.success(json.message || "Konto utworzone. Sprawdź pocztę w celu potwierdzenia.");
+      // Give the user a moment to read the toast, then redirect to the login page.
+      setTimeout(() => {
+        // eslint-disable-next-line react-compiler/react-compiler
+        window.location.href = "/auth/login";
+      }, 5000);
     } catch {
       toast.error("Rejestracja nie powiodła się. Spróbuj ponownie.");
     }

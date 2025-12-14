@@ -74,18 +74,16 @@ Poniżej znajduje się lista kluczowych funkcjonalności, które muszą zostać 
 - Tytuł: Rejestracja nowego użytkownika
 - Opis: Jako nowy użytkownik, chcę móc założyć konto w aplikacji używając mojego adresu e-mail i hasła, aby uzyskać dostęp do jej funkcjonalności.
 - Kryteria akceptacji:
-
   1.  Formularz rejestracji zawiera pola na adres e-mail, hasło i potwierdzenie hasła.
   2.  System waliduje poprawność formatu adresu e-mail.
   3.  System sprawdza, czy hasła w obu polach są identyczne.
-  4.  Po pomyślnej rejestracji, jestem automatycznie zalogowany i przekierowany na główny ekran aplikacji.
+  4.  Po pomyślnej rejestracji użytkownik otrzymuje informację o konieczności potwierdzenia adresu e-mail i jest automatycznie przekierowywany na ekran logowania po 5s.
   5.  Jeśli adres e-mail jest już zajęty, system wyświetla czytelny komunikat o błędzie.
 
 - ID: US-002
 - Tytuł: Logowanie do systemu
 - Opis: Jako zarejestrowany użytkownik, chcę móc zalogować się do aplikacji podając mój e-mail i hasło, aby móc składać zamówienia.
 - Kryteria akceptacji:
-
   1.  Formularz logowania zawiera pola na adres e-mail i hasło.
   2.  Po poprawnym wprowadzeniu danych, jestem zalogowany i przekierowany na główny ekran aplikacji.
   3.  W przypadku podania błędnego e-maila lub hasła, system wyświetla stosowny komunikat.
@@ -105,7 +103,6 @@ Poniżej znajduje się lista kluczowych funkcjonalności, które muszą zostać 
 - Tytuł: Tworzenie zamówienia przez wklejenie listy
 - Opis: Jako fryzjer, chcę wkleić listę produktów skopiowaną z notatnika, aby aplikacja automatycznie przetworzyła ją i przygotowała do dodania do koszyka.
 - Kryteria akceptacji:
-
   1.  Na głównym ekranie widoczne jest duże pole tekstowe do wklejania tekstu.
   2.  Po wklejeniu tekstu i kliknięciu przycisku "Przetwórz", system rozpoczyna analizę.
   3.  Aplikacja poprawnie dzieli na osobne pozycje tekst, w którym produkty są w nowych liniach.
@@ -115,7 +112,6 @@ Poniżej znajduje się lista kluczowych funkcjonalności, które muszą zostać 
 - Tytuł: Dopasowywanie produktów z przetworzonej listy
 - Opis: Jako użytkownik, po przetworzeniu mojej listy, chcę przejść przez każdą pozycję, aby potwierdzić lub wybrać właściwy produkt z bazy danych.
 - Kryteria akceptacji:
-
   1.  Po przetworzeniu listy, system prezentuje mi pierwszą pozycję z listy i znalezione dla niej dopasowania.
   2.  Jeśli znaleziono dokładnie jeden pasujący produkt, jest on domyślnie sugerowany.
   3.  Jeśli znaleziono kilka pasujących produktów, mogę wybrać właściwy z listy.
@@ -128,7 +124,6 @@ Poniżej znajduje się lista kluczowych funkcjonalności, które muszą zostać 
 - Tytuł: Obsługa nierozpoznanych produktów z listy
 - Opis: Jako użytkownik, jeśli aplikacja nie może znaleźć produktu z mojej listy, chcę mieć możliwość łatwej korekty lub ręcznego wyszukania, aby dokończyć zamówienie.
 - Kryteria akceptacji:
-
   1.  Gdy dla danej pozycji z listy system nie znajduje żadnego produktu, wyświetla czytelny komunikat "Nie znaleziono produktu".
   2.  System udostępnia pole edycji, w którym mogę poprawić nazwę nierozpoznanej pozycji.
   3.  System udostępnia przycisk/link do ręcznego wyszukiwania produktu w katalogu.
@@ -148,7 +143,6 @@ Poniżej znajduje się lista kluczowych funkcjonalności, które muszą zostać 
 - Tytuł: Zarządzanie koszykiem
 - Opis: Jako użytkownik, chcę mieć dostęp do widoku koszyka, aby przejrzeć moje zamówienie i dokonać ewentualnych zmian przed jego złożeniem.
 - Kryteria akceptacji:
-
   1.  W interfejsie aplikacji widoczna jest ikona koszyka z liczbą produktów.
   2.  Po kliknięciu w ikonę, widzę listę wszystkich dodanych produktów.
   3.  Dla każdego produktu widzę jego nazwę, cenę (jeśli dotyczy) i ilość.
@@ -172,7 +166,6 @@ Poniżej znajduje się lista kluczowych funkcjonalności, które muszą zostać 
 - Tytuł: Przeglądanie historii zamówień
 - Opis: Jako użytkownik, chcę mieć dostęp do listy moich poprzednich zamówień, aby móc sprawdzić, co zamawiałem w przeszłości.
 - Kryteria akceptacji:
-
   1.  W menu aplikacji znajduje się pozycja "Historia zamówień".
   2.  Po przejściu do tej sekcji, widzę listę wszystkich moich wcześniejszych zamówień.
   3.  Każda pozycja na liście zawiera co najmniej numer zamówienia, datę złożenia i jego sumaryczną wartość.

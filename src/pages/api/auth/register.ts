@@ -30,25 +30,25 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     return new Response(JSON.stringify({ error: signUpError.message || "Registration failed." }), { status: 400 });
   }
 
-  // If signUp returned a session/user, return it. Otherwise try to sign in immediately.
-  // signUp may not return a session if email confirmation is required.
+  // Always require email confirmation before granting an active session.
+  // Return a consistent response telling the user to confirm their email.
   if (signUpData.user) {
-    // Try to obtain a session by signing in (works if confirmation not required)
-    const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
-      email: payload.email,
-      password: payload.password,
-    });
-
-    if (signInError) {
-      // User created but no active session (likely needs email confirm)
-      return new Response(
-        JSON.stringify({ user: signUpData.user, message: "Registered. Please confirm your email if required." }),
-        { status: 201 }
-      );
-    }
-
-    return new Response(JSON.stringify({ user: signInData.user }), { status: 201 });
+    return new Response(
+      JSON.stringify({
+        user: { id: signUpData.user.id, email: signUpData.user.email },
+        message:
+          "Konto zostało utworzone. Na podany adres e-mail wysłano wiadomość z linkiem aktywacyjnym. Kliknij link, aby potwierdzić adres e-mail i aktywować konto.",
+      }),
+      { status: 201 }
+    );
   }
 
-  return new Response(JSON.stringify({ message: "Registration initiated." }), { status: 201 });
+  // Fallback generic success message when no user object returned
+  return new Response(
+    JSON.stringify({
+      message:
+        "Konto zostało utworzone. Na podany adres e-mail wysłano wiadomość z linkiem aktywacyjnym. Kliknij link, aby potwierdzić adres e-mail i aktywować konto.",
+    }),
+    { status: 201 }
+  );
 };
