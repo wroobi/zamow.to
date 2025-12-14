@@ -1,6 +1,6 @@
 {
   "main": "dist/_worker.js/index.js",
-  "name": "my-astro-app",
+  "name": "zamow-to",
   // Update to today's date
   "compatibility_date": "2025-12-14",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
@@ -10,5 +10,17 @@
   },
   "observability": {
     "enabled": true,
+  },
+  "vars": {
+    "SUPABASE_URL": "https://mqfpfjxdimaixtcfofge.supabase.co",
+    "SUPABASE_KEY": "sb_publishable__rzg9CZLWZqZoylDDBl4cw_hCesscFy",
+  },
+  "env": {
+    "preview": {
+      "vars": {
+        "SUPABASE_URL": "https://mqfpfjxdimaixtcfofge.supabase.co",
+        "SUPABASE_KEY": "sb_publishable__rzg9CZLWZqZoylDDBl4cw_hCesscFy",
+      },
+    },
   },
 }

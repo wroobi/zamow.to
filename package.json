@@ -6,7 +6,10 @@
     "dev": "astro dev",
     "dev:e2e": "astro dev --mode test",
     "build": "astro build",
-    "preview": "astro preview",
+    "build:node": "astro build --config astro.config.node.mjs",
+    "preview": "npx wrangler pages dev dist",
+    "preview:astro": "astro preview",
+    "preview:node": "npm run build:node && astro preview --config astro.config.node.mjs",
     "astro": "astro",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -74,7 +77,8 @@
     "prettier-plugin-astro": "0.14.1",
     "typescript-eslint": "8.28.0",
     "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^4.0.15"
+    "vitest": "^4.0.15",
+    "wrangler": "^4.54.0"
   },
   "lint-staged": {
     "*.{ts,tsx,astro}": [
