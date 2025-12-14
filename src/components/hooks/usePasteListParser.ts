@@ -116,12 +116,37 @@ export function usePasteListParser(): UsePasteListParserResult {
     setError(null);
   }, []);
 
-  const confirmProducts = useCallback(() => {
+  const confirmProducts = useCallback(async () => {
     const confirmed = parsedItems.filter((item) => item.status === "matched" && item.suggested_product);
-    setConfirmedItems((prev) => [...prev, ...confirmed]);
-    setParsedItems([]);
-    setRawText("");
-    setStatus("idle");
+
+    // Add to cart via API
+    try {
+      const promises = confirmed.map(async (item) => {
+        if (!item.suggested_product) return;
+        const res = await fetch("/api/cart/items", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            product_id: item.suggested_product.id,
+            quantity: item.quantity || 1,
+          }),
+        });
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.error || "Failed to add item");
+        }
+      });
+
+      await Promise.all(promises);
+
+      setConfirmedItems((prev) => [...prev, ...confirmed]);
+      setParsedItems([]);
+      setRawText("");
+      setStatus("idle");
+    } catch (e: any) {
+      console.error("Failed to add items to cart", e);
+      setError({ message: e.message || "Nie udało się dodać produktów do koszyka", code: "NETWORK" });
+    }
   }, [parsedItems]);
 
   const updateQuantity = useCallback((index: number, quantity: number) => {

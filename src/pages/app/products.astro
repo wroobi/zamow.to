@@ -1,0 +1,19 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import ProductCatalog from "../../components/products/ProductCatalog";
+---
+
+<html lang="pl">
+  <head>
+    <meta charset="utf-8" />
+    <title>Katalog produktów - zamow.to</title>
+  </head>
+  <body>
+    <Layout title="Katalog produktów">
+      <main class="mx-auto max-w-3xl px-4 py-8">
+        <h1 class="text-2xl font-semibold mb-6">Katalog produktów</h1>
+        <ProductCatalog client:load />
+      </main>
+    </Layout>
+  </body>
+</html>

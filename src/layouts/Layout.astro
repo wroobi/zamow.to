@@ -25,6 +25,19 @@ const { user } = Astro.locals;
       {
         user ? (
           <div class="flex items-center gap-3">
+            <a href="/app" class="text-sm text-neutral-700 hover:underline">
+              Wklej listę
+            </a>
+            <a href="/app/products" class="text-sm text-neutral-700 hover:underline">
+              Katalog
+            </a>
+            <a href="/app/cart" class="text-sm text-neutral-700 hover:underline">
+              Koszyk
+            </a>
+            <a href="/app/history" class="text-sm text-neutral-700 hover:underline">
+              Historia
+            </a>
+            <span class="text-sm text-neutral-300">|</span>
             <span class="text-sm text-neutral-700">{user.email ?? "Użytkownik"}</span>
             <form method="post" action="/api/auth/logout">
               <button type="submit" class="text-sm text-neutral-700 hover:underline">
