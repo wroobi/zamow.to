@@ -29,13 +29,18 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   let payload;
   try {
     payload = AddItemSchema.parse(await request.json());
-  } catch (e) {
+  } catch {
     return new Response(JSON.stringify({ error: "Invalid payload" }), { status: 400 });
   }
 
   // 3. Get or Create Cart
   // We need the cart_id to insert the item.
-  let { data: cart, error: cartError } = await supabase.from("carts").select("id").eq("user_id", user.id).maybeSingle();
+  const { data: initialCart, error: cartError } = await supabase
+    .from("carts")
+    .select("id")
+    .eq("user_id", user.id)
+    .maybeSingle();
+  let cart = initialCart;
 
   if (cartError) {
     return new Response(JSON.stringify({ error: "Database error fetching cart" }), { status: 500 });

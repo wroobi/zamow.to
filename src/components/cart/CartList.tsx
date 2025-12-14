@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { useCart } from "@/components/hooks/useCart";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 export default function CartList() {
-  const { cart, isLoading, error, updateQuantity, removeItem, refreshCart } = useCart();
+  const { cart, isLoading, error, updateQuantity, removeItem } = useCart();
   const [isOrdering, setIsOrdering] = useState(false);
 
   const handlePlaceOrder = async () => {
@@ -29,9 +29,8 @@ export default function CartList() {
 
       // Redirect to order details or history
       window.location.href = `/app/history/${order.id}`;
-    } catch (err: any) {
-      toast.error(err.message || "Błąd składania zamówienia");
-      console.error(err);
+    } catch (err: unknown) {
+      toast.error((err as Error).message || "Błąd składania zamówienia");
       setIsOrdering(false);
     }
   };

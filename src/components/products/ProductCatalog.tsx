@@ -30,8 +30,7 @@ export default function ProductCatalog() {
 
         const data: PaginatedResponse<ProductListItemDto> = await res.json();
         setProducts(data.data);
-      } catch (err) {
-        console.error(err);
+      } catch {
         toast.error("Błąd pobierania produktów");
       } finally {
         setIsLoading(false);
@@ -55,8 +54,7 @@ export default function ProductCatalog() {
       if (!res.ok) throw new Error("Failed to add to cart");
 
       toast.success(`Dodano do koszyka: ${product.name}`);
-    } catch (err) {
-      console.error(err);
+    } catch {
       toast.error("Nie udało się dodać produktu");
     }
   };

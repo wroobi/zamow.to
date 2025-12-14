@@ -143,9 +143,8 @@ export function usePasteListParser(): UsePasteListParserResult {
       setParsedItems([]);
       setRawText("");
       setStatus("idle");
-    } catch (e: any) {
-      console.error("Failed to add items to cart", e);
-      setError({ message: e.message || "Nie udało się dodać produktów do koszyka", code: "NETWORK" });
+    } catch (e: unknown) {
+      setError({ message: (e as Error).message || "Nie udało się dodać produktów do koszyka", code: "NETWORK" });
     }
   }, [parsedItems]);
 

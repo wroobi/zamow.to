@@ -16,9 +16,8 @@ export default function OrderDetails({ orderId }: { orderId: string }) {
         if (!res.ok) throw new Error("Failed to fetch order details");
         const data = await res.json();
         setOrder(data);
-      } catch (err) {
+      } catch {
         setError("Nie udało się pobrać szczegółów zamówienia");
-        console.error(err);
       } finally {
         setIsLoading(false);
       }

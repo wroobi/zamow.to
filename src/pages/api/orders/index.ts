@@ -70,7 +70,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
   // 3. Calculate Total
   // Note: In a real app, verify prices again or use DB functions.
-  const totalAmount = cart.items.reduce((sum: number, item: any) => {
+  const totalAmount = cart.items.reduce((sum: number, item: { quantity: number; product: { price: number } }) => {
     return sum + item.quantity * item.product.price;
   }, 0);
 
@@ -90,13 +90,15 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   }
 
   // 5. Create Order Items
-  const orderItems = cart.items.map((item: any) => ({
-    order_id: order.id,
-    product_id: item.product.id,
-    product_name: item.product.name,
-    quantity: item.quantity,
-    price_per_unit: item.product.price,
-  }));
+  const orderItems = cart.items.map(
+    (item: { quantity: number; product: { id: string; name: string; price: number } }) => ({
+      order_id: order.id,
+      product_id: item.product.id,
+      product_name: item.product.name,
+      quantity: item.quantity,
+      price_per_unit: item.product.price,
+    })
+  );
 
   const { error: itemsError } = await supabase.from("order_items").insert(orderItems);
 
@@ -110,11 +112,13 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   const { error: clearError } = await supabase.from("cart_items").delete().eq("cart_id", cart.id);
 
   if (clearError) {
+    // eslint-disable-next-line no-console
     console.error("Failed to clear cart after order", clearError);
     // Order is created, but cart is not empty. This is a bad state but order is safe.
   }
 
   // 7. Send Email (Mock)
+  // eslint-disable-next-line no-console
   console.log(`[MOCK EMAIL] Sending order confirmation to ${user.email} for order ${order.id}`);
 
   const responseDto: OrderConfirmationDto = {

@@ -77,16 +77,22 @@ export const GET: APIRoute = async ({ request, cookies }) => {
   // Note: Supabase types might be slightly different from DTO if joins are involved, so we map explicitly.
 
   const items: CartItemDto[] = Array.isArray(cart.items)
-    ? cart.items.map((item: any) => ({
-        id: item.id,
-        quantity: item.quantity,
-        product: {
-          id: item.product.id,
-          name: item.product.name,
-          price: item.product.price,
-          sku: item.product.sku,
-        },
-      }))
+    ? cart.items.map(
+        (item: {
+          id: string;
+          quantity: number;
+          product: { id: string; name: string; price: number; sku: string };
+        }) => ({
+          id: item.id,
+          quantity: item.quantity,
+          product: {
+            id: item.product.id,
+            name: item.product.name,
+            price: item.product.price,
+            sku: item.product.sku,
+          },
+        })
+      )
     : [];
 
   const totalAmount = items.reduce((sum, item) => sum + item.quantity * item.product.price, 0);

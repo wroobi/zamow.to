@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import type { OrderListItemDto } from "@/types";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
 export default function OrderHistoryList() {
@@ -15,9 +15,8 @@ export default function OrderHistoryList() {
         if (!res.ok) throw new Error("Failed to fetch orders");
         const data = await res.json();
         setOrders(data);
-      } catch (err) {
+      } catch {
         setError("Nie udało się pobrać historii zamówień");
-        console.error(err);
       } finally {
         setIsLoading(false);
       }

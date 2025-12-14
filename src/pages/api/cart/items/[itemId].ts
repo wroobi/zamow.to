@@ -1,6 +1,6 @@
 import type { APIRoute } from "astro";
 import { z } from "zod";
-import { createSupabaseServerInstance } from "@/db/supabase.client";
+import { createSupabaseServerInstance, type SupabaseClient } from "@/db/supabase.client";
 
 export const prerender = false;
 
@@ -9,7 +9,7 @@ const UpdateItemSchema = z.object({
 });
 
 // Helper to get user's cart id
-async function getUserCartId(supabase: any, userId: string): Promise<string | null> {
+async function getUserCartId(supabase: SupabaseClient, userId: string): Promise<string | null> {
   const { data, error } = await supabase.from("carts").select("id").eq("user_id", userId).maybeSingle();
 
   if (error || !data) return null;

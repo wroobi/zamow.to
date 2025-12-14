@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import type { CartDto, CartItemDto } from "@/types";
+import type { CartDto } from "@/types";
 import { toast } from "sonner";
 
 export function useCart() {
@@ -13,15 +13,13 @@ export function useCart() {
       const res = await fetch("/api/cart");
       if (!res.ok) {
         const errData = await res.json().catch(() => ({}));
-        console.error("Cart fetch error:", errData);
         throw new Error(errData.error || "Failed to fetch cart");
       }
       const data: CartDto = await res.json();
       setCart(data);
       setError(null);
-    } catch (err: any) {
-      setError(err.message || "Nie udało się pobrać koszyka");
-      console.error(err);
+    } catch (err: unknown) {
+      setError((err as Error).message || "Nie udało się pobrać koszyka");
     } finally {
       setIsLoading(false);
     }
@@ -53,40 +51,34 @@ export function useCart() {
         });
 
         toast.success("Zaktualizowano ilość");
-      } catch (err) {
+      } catch {
         toast.error("Błąd aktualizacji ilości");
-        console.error(err);
         fetchCart(); // Revert on error
       }
     },
     [fetchCart]
   );
 
-  const removeItem = useCallback(
-    async (itemId: string) => {
-      try {
-        const res = await fetch(`/api/cart/items/${itemId}`, {
-          method: "DELETE",
-        });
+  const removeItem = useCallback(async (itemId: string) => {
+    try {
+      const res = await fetch(`/api/cart/items/${itemId}`, {
+        method: "DELETE",
+      });
 
-        if (!res.ok) throw new Error("Failed to remove item");
+      if (!res.ok) throw new Error("Failed to remove item");
 
-        setCart((prev) => {
-          if (!prev) return null;
-          const updatedItems = prev.items.filter((item) => item.id !== itemId);
-          const updatedTotal = updatedItems.reduce((sum, item) => sum + item.quantity * item.product.price, 0);
-          return { ...prev, items: updatedItems, total_amount: updatedTotal };
-        });
+      setCart((prev) => {
+        if (!prev) return null;
+        const updatedItems = prev.items.filter((item) => item.id !== itemId);
+        const updatedTotal = updatedItems.reduce((sum, item) => sum + item.quantity * item.product.price, 0);
+        return { ...prev, items: updatedItems, total_amount: updatedTotal };
+      });
 
-        toast.success("Usunięto produkt z koszyka");
-      } catch (err) {
-        toast.error("Błąd usuwania produktu");
-        console.error(err);
-        fetchCart();
-      }
-    },
-    [fetchCart]
-  );
+      toast.success("Usunięto produkt z koszyka");
+    } catch {
+      toast.error("Błąd usuwania produktu");
+    }
+  }, []);
 
   return {
     cart,
