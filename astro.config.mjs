@@ -17,5 +17,9 @@ export default defineConfig({
   },
   adapter: cloudflare({
     imageService: "cloudflare",
+    runtime: {
+      mode: "local",
+      type: "pages",
+    },
   }),
 });
