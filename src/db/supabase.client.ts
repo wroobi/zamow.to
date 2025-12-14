@@ -32,27 +32,7 @@ export const createSupabaseServerInstance = (context: {
   headers: Headers;
   cookies: AstroCookies;
 }): SupabaseClient<Database> => {
-  // Try multiple sources for environment variables
-  const supabaseUrl =
-    import.meta.env.SUPABASE_URL ||
-    process.env.SUPABASE_URL ||
-    (typeof globalThis !== "undefined" && (globalThis as any).SUPABASE_URL);
-
-  const supabaseKey =
-    import.meta.env.SUPABASE_KEY ||
-    process.env.SUPABASE_KEY ||
-    (typeof globalThis !== "undefined" && (globalThis as any).SUPABASE_KEY);
-
-  if (!supabaseUrl || !supabaseKey) {
-    throw new Error(
-      `Missing Supabase environment variables:\n` +
-        `SUPABASE_URL: ${supabaseUrl ? "✓" : "✗"}\n` +
-        `SUPABASE_KEY: ${supabaseKey ? "✓" : "✗"}\n` +
-        `Check your .env file and Cloudflare Pages environment variables`
-    );
-  }
-
-  const supabase = createServerClient<Database>(supabaseUrl, supabaseKey, {
+  const supabase = createServerClient<Database>(import.meta.env.SUPABASE_URL, import.meta.env.SUPABASE_KEY, {
     cookieOptions,
     cookies: {
       getAll() {
