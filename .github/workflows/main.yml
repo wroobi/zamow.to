@@ -3,10 +3,6 @@ name: Deploy to Cloudflare Pages
 on:
   workflow_dispatch:
 
-permissions:
-  contents: read
-  deployments: write
-
 jobs:
   lint:
     name: Lint Code
@@ -36,10 +32,15 @@ jobs:
         run: npm run test
 
   deploy:
-    name: Deploy
-    runs-on: ubuntu-latest
+    name: Deploy to Cloudflare Pages
     needs: [lint, unit-test]
-    environment: production
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    environment:
+      name: production
+      url: ${{ steps.deploy.outputs.page_url }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -59,4 +60,3 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy dist --project-name=zamow-to
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
