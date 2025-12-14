@@ -22,7 +22,7 @@ Wybrany stos technologiczny jest nowoczesny, solidny i bardzo dobrze dopasowany 
 
 - **Frontend:** Astro generuje wysoce zoptymalizowane strony, które doskonale się skalują pod względem ruchu. Aplikacja będzie szybka nawet przy dużej liczbie użytkowników.
 - **Backend:** Supabase jest zbudowany na PostgreSQL, jednej z najbardziej skalowalnych i niezawodnych relacyjnych baz danych. Oferuje on możliwość migracji na większe instancje lub nawet self-hosting w przyszłości, co daje pełną kontrolę nad skalowaniem.
-- **Hosting:** DigitalOcean i Docker to standard branżowy. Pozwala to na skalowanie wertykalne (zwiększanie mocy serwera) i horyzontalne (dodawanie kolejnych instancji aplikacji), co jest kluczowe przy wzroście obciążenia.
+- **Hosting:** Cloudflare Pages to rozwiązanie serverless, które automatycznie skaluje się do obsługi ogromnego ruchu bez konieczności zarządzania serwerami. Globalna sieć CDN Cloudflare zapewnia błyskawiczne dostarczanie treści na całym świecie.
 
 #### 3. Czy koszt utrzymania i rozwoju będzie akceptowalny?
 
@@ -30,30 +30,27 @@ Wybrany stos technologiczny jest nowoczesny, solidny i bardzo dobrze dopasowany 
 
 - **Supabase:** Posiada hojny darmowy plan, który w zupełności wystarczy na potrzeby MVP i pierwszych użytkowników. Koszty rosną w przewidywalny sposób wraz ze wzrostem użycia.
 - **OpenRouter:** Płacisz tylko za faktyczne zużycie API. Możliwość wyboru tańszych, ale wciąż skutecznych modeli oraz ustawiania twardych limitów finansowych na klucze API daje pełną kontrolę nad kosztami i chroni przed niespodziewanymi wydatkami.
-- **DigitalOcean/GitHub Actions:** Koszty początkowe będą minimalne. GitHub Actions oferuje darmowe minuty na projekty open source i w ramach planów płatnych. Najmniejsze serwery (Droplets) na DigitalOcean są tanie i wystarczające na start.
+- **Cloudflare Pages:** Oferuje bardzo hojny darmowy plan, który obejmuje nielimitowaną przepustowość i dużą liczbę żądań. Dla projektu MVP koszty hostingu będą prawdopodobnie zerowe, a skalowanie w górę jest tanie i przewidywalne.
 
 #### 4. Czy potrzebujemy aż tak złożonego rozwiązania?
 
-**Rozwiązanie jest bardziej rozbudowane niż absolutne minimum, ale ta "złożoność" jest uzasadniona i stanowi inwestycję w przyszłość.**
+**Rozwiązanie jest zbalansowane i nie wprowadza zbędnej złożoności.**
 
 - **Frontend:** Wybór Astro z Reactem zamiast "czystego" Reacta (np. przez Vite) dodaje jedną warstwę technologiczną. Jednak korzyści wydajnościowe i strukturalne, jakie daje Astro, uzasadniają ten wybór, zwłaszcza że nie komplikuje to znacząco procesu deweloperskiego.
-- **CI/CD i Hosting:** Konfiguracja GitHub Actions i Dockera na DigitalOcean wymaga pewnej wiedzy z zakresu DevOps. To bardziej złożone niż wdrożenie na platformach typu Vercel czy Netlify. Jednak ta złożoność daje pełną kontrolę nad środowiskiem, co będzie kluczowe przy przyszłych integracjach i skalowaniu.
+- **CI/CD i Hosting:** Integracja Cloudflare Pages z GitHub jest bezproblemowa i automatyczna. Każdy push do repozytorium uruchamia budowanie i wdrożenie, co eliminuje potrzebę skomplikowanej konfiguracji DevOps, jednocześnie zachowując profesjonalny workflow.
 
 #### 5. Czy nie istnieje prostsze podejście, które spełni nasze wymagania?
 
-**Tak, istnieje prostsze podejście, ale wiąże się ono z pewnymi kompromisami.**
+**Wybrane podejście (Cloudflare) jest już jednym z najprostszych i najwydajniejszych.**
 
-- **Alternatywa Hostingowa:** Zamiast DigitalOcean + Docker + GitHub Actions, można by użyć platformy **Vercel**. Vercel ma natywną, "bezwysiłkową" integrację z Astro i frameworkami frontendowymi. Wdrożenie sprowadza się do podpięcia repozytorium GitHub, a CI/CD jest wbudowane i skonfigurowane automatycznie.
-- **Plusy prostszego podejścia (Vercel):**
-  - Ekstremalnie szybki setup i wdrożenie.
-  - Brak potrzeby zarządzania serwerami i konfiguracją CI/CD.
-  - Idealne na absolutne MVP, gdzie liczy się każda godzina.
-- **Minusy prostszego podejścia (Vercel):**
-  - Mniejsza elastyczność w konfiguracji serwera.
-  - Potencjalnie wyższe koszty przy dużym skalowaniu (choć plany darmowe są bardzo hojne).
-  - Mniejsza kontrola nad środowiskiem wykonawczym, co może być problemem w przyszłości.
+- **Porównanie:** Cloudflare Pages oferuje podobną prostotę wdrożenia co Vercel czy Netlify (git-push-to-deploy), ale często z lepszą wydajnością i niższymi kosztami przy dużej skali.
+- **Zalety wyboru Cloudflare:**
+  - Minimalna konfiguracja DevOps.
+  - Wbudowane bezpieczeństwo (DDoS protection).
+  - Globalna sieć Edge (CDN) w standardzie.
+  - Brak konieczności zarządzania serwerami (Serverless).
 
-Wybór między Docker/DigitalOcean a Vercel sprowadza się do priorytetów: maksymalna prostota i szybkość (Vercel) vs. większa kontrola i elastyczność na przyszłość (DigitalOcean).
+Wybór Cloudflare eliminuje złożoność zarządzania infrastrukturą, pozwalając skupić się w 100% na rozwoju produktu.
 
 #### 6. Czy technologie pozwoli nam zadbać o odpowiednie bezpieczeństwo?
 
@@ -61,9 +58,9 @@ Wybór między Docker/DigitalOcean a Vercel sprowadza się do priorytetów: maks
 
 - **Autentykacja:** Supabase Auth to dojrzałe rozwiązanie, które obsługuje bezpieczne logowanie, zarządzanie sesjami (JWT) i integracje z dostawcami zewnętrznymi. Najważniejszym zadaniem będzie prawidłowe skonfigurowanie **Row Level Security (RLS)** w bazie danych, aby upewnić się, że użytkownicy mają dostęp wyłącznie do swoich danych (np. historii swoich zamówień).
 - **API Keys:** Klucze do OpenRouter muszą być bezpiecznie przechowywane jako zmienne środowiskowe na serwerze i nigdy nie powinny być eksponowane po stronie frontendu. Backend (w tym wypadku mogą to być Supabase Edge Functions) powinien pośredniczyć w komunikacji z AI.
-- **Infrastruktura:** Docker i DigitalOcean pozwalają na implementację standardowych praktyk bezpieczeństwa, takich jak konfiguracja firewalla, zarządzanie dostępem i regularne aktualizacje.
+- **Infrastruktura:** Cloudflare zapewnia bezpieczeństwo na poziomie enterprise "out of the box", w tym ochronę przed atakami DDoS, szyfrowanie SSL/TLS oraz firewall aplikacji webowych (WAF).
 
-**Podsumowując:** Wybrany stos technologiczny jest bardzo dobrym, profesjonalnym wyborem. Stanowi złoty środek między szybkością dostarczenia MVP a budowaniem solidnej, skalowalnej i bezpiecznej platformy na przyszłość. Ewentualna zmiana na prostsze rozwiązanie hostingowe (Vercel) mogłaby jeszcze bardziej przyspieszyć start, kosztem elastyczności w dłuższej perspektywie.
+**Podsumowując:** Wybrany stos technologiczny z Cloudflare jako platformą hostingową jest doskonałym wyborem. Łączy szybkość dostarczania MVP (dzięki prostocie wdrożenia) z potężną skalowalnością i bezpieczeństwem globalnej infrastruktury Cloudflare.
 
 ---
 
