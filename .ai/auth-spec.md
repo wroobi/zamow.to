@@ -53,7 +53,7 @@ Do budowy formularzy i walidacji wykorzystane zostaną biblioteki `react-hook-fo
 ### 2.4. Modyfikacja Istniejących Elementów
 
 - `src/layouts/Layout.astro`: Główny layout aplikacji zostanie zmodyfikowany, aby dynamicznie renderować interfejs w zależności od stanu zalogowania użytkownika (`Astro.locals.user`).
-  - **Stan zalogowany**: Wyświetli nawigację z opcjami takimi jak "Historia zamówień", "Koszyk" oraz przycisk/link "Wyloguj się", który będzie realizował akcję `POST` na `/api/auth/logout`.
+  - **Stan zalogowany**: Wyświetli nawigację z opcjami takimi jak "Historia zamówień", "Koszyk" oraz przycisk/link "Wyloguj się", który będzie realizował akcję `POST` na `/api/auth/logout` i przekieruje na stronę główną `/`.
   - **Stan niezalogowany**: Wyświetli przyciski "Zaloguj się" i "Zarejestruj się".
 - `src/pages/app/index.astro`: Strona główna aplikacji będzie teraz chroniona. Na początku pliku znajdzie się sprawdzenie `Astro.locals.user`. Jeśli użytkownik nie jest zalogowany, zostanie przekierowany na stronę `/auth/login`.
 
@@ -74,8 +74,8 @@ Zgodnie z instrukcją `supabase-auth.mdc`, utworzone zostaną następujące endp
   - **Odpowiedź (Sukces)**: `201 Created` z danymi użytkownika.
   - **Odpowiedź (Błąd)**: `400 Bad Request` z komunikatem błędu (np. "User already registered").
 - `POST /api/auth/logout`:
-  - **Logika**: Wywołuje `supabase.auth.signOut`. Po wylogowaniu, użytkownik jest przekierowywany na stronę logowania.
-  - **Odpowiedź (Sukces)**: Przekierowanie (np. `302 Found`) na `/auth/login`.
+  - **Logika**: Wywołuje `supabase.auth.signOut`. Po wylogowaniu, użytkownik jest przekierowywany na stronę główną.
+  - **Odpowiedź (Sukces)**: Przekierowanie (np. `302 Found`) na `/`.
   - **Odpowiedź (Błąd)**: `500 Internal Server Error`.
 - `POST /api/auth/reset-password`:
   - **Model Danych (Request)**: `{ email: string }`
